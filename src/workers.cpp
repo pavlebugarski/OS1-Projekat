@@ -46,7 +46,7 @@ void workerBodyC() {
         printString("\n");
     }
     printString("C: yield\n");
-    __asm__ ("li t1 7");
+    __asm__ ("li t1, 7");
     TCB::yield();
     uint64 t1 = 0;
     __asm__ ("mv %[t1], t1" : [t1] "=r" (t1));
@@ -71,9 +71,9 @@ void workerBodyD() {
         printString("\n");
     }
     printString("D: yield\n");
-    __asm__ ("li t1 5");
+    __asm__ ("li t1, 5");
     TCB::yield();
-    uint64 t1 = 0;
+    //uint64 t1 = 0;
     /*__asm__ ("mv %[t1], t1" : [t1] "=r" (t1));
     printString("D: t1=");
     printInteger(t1);

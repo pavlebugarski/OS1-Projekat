@@ -33,7 +33,7 @@ public:
     static void w_sstatus(uint64 ststatus);
     static void supervisorTrap();
 private:
-    static void handleSupervisorTrap();
+    static void handleSupervisorTrap(uint64* context);
 };
 
 inline uint64 Riscv::r_scause() {
@@ -94,7 +94,7 @@ inline void Riscv::mc_sstatus(uint64 mask) {
     __asm__ volatile ("csrc sstatus, %[mask] " : : [mask] "r" (mask));
 }
 inline void Riscv::w_sstatus(uint64 sstatus) {
-    __asm__ volatile ("csrw sstatus %[sstatus] " : : [sstatus] "r" (sstatus));
+    __asm__ volatile ("csrw sstatus, %[sstatus] " : : [sstatus] "r" (sstatus));
 }
 
 inline uint64 Riscv::r_sstatus() {

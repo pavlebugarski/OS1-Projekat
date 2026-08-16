@@ -4,7 +4,7 @@
 #include "../h/riscv.hpp"
 #include "../lib/console.h"
 #include "../h/tcb.hpp"
-void Riscv::handleSupervisorTrap() {
+void Riscv::handleSupervisorTrap(uint64* context) {
 
     uint64 scause = r_scause();
     if (scause == 0x0000000000000009UL) {

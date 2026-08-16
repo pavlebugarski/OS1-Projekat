@@ -1,10 +1,10 @@
 #pragma once
 #include "List.hpp"
-#include "tcb.hpp"
+class TCB;
 class Scheduler {
 private:
-    static List<CCB> readyContinueQueue;
+    static List<TCB> readyContinueQueue;
 public:
-    static CCB* get();
-    static void put(CCB* ccb);
-}
+    static TCB* get();
+    static void put(TCB* ccb);
+};

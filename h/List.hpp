@@ -24,14 +24,10 @@ public:
     void addLast(T* data) {
         Elem* elem = new Elem(data, 0);
         if (!tail) {
-
+            head = tail = elem;
+        } else {
             tail->next = elem;
             tail = elem;
-
-        }else {
-
-            head = tail = elem;
-
         }
     }
     T* removeFirst() {

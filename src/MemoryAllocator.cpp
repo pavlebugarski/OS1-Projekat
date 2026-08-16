@@ -7,7 +7,7 @@ MemoryAllocator& MemoryAllocator::getInstance() {
 }
 MemoryAllocator::MemoryAllocator() {
     freeListHead = (FreeSegment*) HEAP_START_ADDR;
-    freeListHead->size =  HEAP_SIZE;
+    freeListHead->size = (size_t)((char*)HEAP_END_ADDR - (char*)HEAP_START_ADDR);
     freeListHead->next = nullptr;
 }
 size_t MemoryAllocator::roundUpBlock(size_t bytes) {
@@ -58,7 +58,7 @@ int MemoryAllocator::free(void* ptr) {
     if (ptr == nullptr) {
         return -1;
     }
-    FreeSegment* seg = (FreeSegment*)((char*)addr - sizeof(FreeSegment));
+    FreeSegment* seg = (FreeSegment*)((char*)ptr - sizeof(FreeSegment));
     FreeSegment* freeSegment = freeListHead;
     FreeSegment* previous = nullptr;
 

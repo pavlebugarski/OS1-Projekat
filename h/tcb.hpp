@@ -1,6 +1,6 @@
 #pragma once
 #include "../lib/hw.h"
-
+#include "../h/scheduler.hpp"
 class TCB {
     public:
     using Body = void (*)();
