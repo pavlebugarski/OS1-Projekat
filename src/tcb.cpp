@@ -4,6 +4,7 @@
 #include "../h/tcb.hpp"
 #include "../h/riscv.hpp"
 #include "../h/scheduler.hpp"
+#include "../h/syscall_c.hpp"
 
 TCB* TCB::running = nullptr;
 uint64   TCB::timeSliceCounter = 0;
@@ -21,8 +22,9 @@ void TCB::setFinished(bool finished) {
 }
 
 void  TCB::yield() {
-    __asm__ volatile ("ecall");
-}
+    register uint64 x10 __asm__ ("x10") = SYSCALL_THREAD_DISPATCH;
+    __asm__ volatile("ecall" : "+r"(x10) : :  "memory");
+ }
 
 void  TCB::dispatch() {
      TCB *old = running;

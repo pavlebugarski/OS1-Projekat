@@ -6,14 +6,16 @@
 #include "../h/syscall_c.hpp"
 
 void handleSyscall(uint64* context) {
+    uint64 result;
     switch (context[10]) {
         case SYSCALL_MEM_ALLOC:
-            MemoryAllocator::getInstance().alloc(context[11]*MEM_BLOCK_SIZE);
+            result = (uint64) MemoryAllocator::getInstance().alloc(context[11]*MEM_BLOCK_SIZE);
             break;
         case SYSCALL_MEM_FREE:
-            MemoryAllocator::getInstance().free((void*)context[11]);
+            result = (uint64) MemoryAllocator::getInstance().free((void*)context[11]);
             break;
-        default: context[10] = SYSCALL_UNKNOWN;
+        default: result = (uint64) SYSCALL_UNKNOWN;
     }
+    context[10] = result;
 
 }

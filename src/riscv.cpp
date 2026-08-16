@@ -4,18 +4,27 @@
 #include "../h/riscv.hpp"
 #include "../lib/console.h"
 #include "../h/tcb.hpp"
+#include "../h/handleSyscall.hpp"
+#include "../h/syscall_c.hpp"
+
 void Riscv::handleSupervisorTrap(uint64* context) {
 
     uint64 scause = r_scause();
     if (scause == 0x0000000000000009UL) {
         //sinhrona promena konteksta
         //sepc je kao pc program counter
-        uint64 sepc = r_sepc()+4;
-        uint64 sstatus = r_sstatus();
-        TCB::timeSliceCounter = 0;
-        TCB::dispatch();
-        w_sstatus(sstatus);
-        w_sepc(sepc);
+        uint64 code = context[10];
+        if (code == SYSCALL_THREAD_DISPATCH) {
+            uint64 sepc = r_sepc()+4;
+            uint64 sstatus = r_sstatus();
+            TCB::timeSliceCounter = 0;
+            TCB::dispatch();
+            w_sstatus(sstatus);
+            w_sepc(sepc);
+        }else {
+            handleSyscall(context);
+            w_sepc(r_sepc()+4);
+        }
     }else if (scause == 0x8000000000000001UL) {
         //asinhrona promena konteksta
         //obrada timera
