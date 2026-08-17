@@ -8,5 +8,15 @@ enum SyscallCode{
     SYSCALL_THREAD_DISPATCH = 0x13,
     SYSCALL_UNKNOWN = -1,
 };
+
+class _thread;
+typedef _thread *thread_t;
 void* mem_alloc(size_t size);
 int mem_free(void *ptr);
+int thread_exit();
+int thread_create(
+    thread_t *handle,
+    void(*start_routine)(void *),
+    void *arg
+    );
+void thread_dispatch();

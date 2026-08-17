@@ -11,22 +11,25 @@ class TCB {
 
 
     static TCB* createThread(Body body);
+    static TCB* createThread(Body body,uint64* stack);
     bool isFinished() const;
     void setFinished(bool finished);
     static void yield();
     uint64 getTimeSlice() const;
+    static int exitCurrent();
     static TCB* running;
 private:
-    explicit TCB(Body body,uint64 timeSlice):
-        body(body), stack(body!=nullptr ? new uint64[STACK_SIZE] : nullptr),context({
-            (uint64) &threadWrapper,
-            stack!= nullptr ? (uint64)&stack[STACK_SIZE] : 0
-        }),timeSlice(timeSlice),finished(false)
+    explicit TCB(Body body,uint64 timeSlice, uint64* stack):
+                                body(body),
+                                stack(body!=nullptr ? stack : nullptr),
+                                context({
+                                    (uint64) &threadWrapper,
+                                        stack!= nullptr ? (uint64)&stack[STACK_SIZE] : 0
+                                }),timeSlice(timeSlice),finished(false)
     {
-         if (body != nullptr) {
-             Scheduler::put(this);
-         }
-
+        if (body != nullptr) {
+            Scheduler::put(this);
+        }
     }
     struct Context {
         uint64 ra;

@@ -4,7 +4,7 @@
 #include "../h/handleSyscall.hpp"
 #include "../h/MemoryAllocator.hpp"
 #include "../h/syscall_c.hpp"
-
+#include "../h/tcb.hpp"
 void handleSyscall(uint64* context) {
     uint64 result;
     switch (context[10]) {
@@ -13,6 +13,12 @@ void handleSyscall(uint64* context) {
             break;
         case SYSCALL_MEM_FREE:
             result = (uint64) MemoryAllocator::getInstance().free((void*)context[11]);
+            break;
+        case SYSCALL_THREAD_CREATE:
+            result = (uint64) TCB::createThread((TCB::Body)context[11],(uint64*) context[12]);
+            break;
+        case SYSCALL_THREAD_EXIT:
+            result = (uint64) TCB::exitCurrent();
             break;
         default: result = (uint64) SYSCALL_UNKNOWN;
     }

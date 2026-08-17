@@ -2,6 +2,8 @@
 // Created by os on 8/12/26.
 //
 #include "../h/tcb.hpp"
+
+#include "../h/MemoryAllocator.hpp"
 #include "../h/riscv.hpp"
 #include "../h/scheduler.hpp"
 #include "../h/syscall_c.hpp"
@@ -17,10 +19,30 @@ void TCB::setFinished(bool finished) {
     TCB::finished = finished;
 }
 
- TCB * TCB::createThread(Body body) {
-    return new  TCB(body,TIME_SLICE_SIZE);
+int TCB::exitCurrent() {
+    if (running == nullptr) {
+        return -1;
+    }
+    running->setFinished(true);
+    dispatch();
+    return 0;
 }
 
+
+
+TCB * TCB::createThread(Body body) {
+    uint64* stack = nullptr;
+    if (body != nullptr) {
+        stack = (uint64*) MemoryAllocator::getInstance().alloc(STACK_SIZE*sizeof(uint64));
+    }
+    return new  TCB(body,TIME_SLICE_SIZE,stack);
+}
+TCB* TCB::createThread(Body body,uint64* stack) {
+    if (body != nullptr && stack != nullptr) {
+        return nullptr;
+    }
+    return new  TCB(body,TIME_SLICE_SIZE,stack);
+}
 void  TCB::yield() {
     register uint64 x10 __asm__ ("x10") = SYSCALL_THREAD_DISPATCH;
     __asm__ volatile("ecall" : "+r"(x10) : :  "memory");
@@ -40,8 +62,12 @@ uint64 TCB::getTimeSlice() const {
 }
 
 void TCB::threadWrapper() {
-    Riscv::popSppSpie();
-    running->body();
+    if (running->body != nullptr) {
+        Riscv :: mc_sstatus(Riscv::SSTAUTS_SPP);
+        Riscv::popSppSpie();
+        running->body();
+    }
+
     running->setFinished(true);
     TCB::yield();
 }

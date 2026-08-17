@@ -10,7 +10,7 @@
 void Riscv::handleSupervisorTrap(uint64* context) {
 
     uint64 scause = r_scause();
-    if (scause == 0x0000000000000009UL) {
+    if (scause == 0x0000000000000009UL || scause == 0x0000000000000008UL) {
         //sinhrona promena konteksta
         //sepc je kao pc program counter
         uint64 code = context[10];

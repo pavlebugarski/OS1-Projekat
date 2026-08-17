@@ -4,7 +4,7 @@
 #include "../lib/hw.h"
 #include "../h/tcb.hpp"
 #include "../h/print.hpp"
-void workerBodyA() {
+void workerBodyA(void* arg) {
     for (uint64 i=0;i<10;i++) {
         printString("A: i=");
         printInteger(i);
@@ -16,7 +16,7 @@ void workerBodyA() {
         }
     }
 }
-void workerBodyB() {
+void workerBodyB(void* arg) {
     for (uint64 i=0;i<16;i++) {
         printString("B: i=");
         printInteger(i);
@@ -38,7 +38,7 @@ static uint64 fibonacci(uint64 n) {
     return fibonacci(n-1) + fibonacci(n-2);
 
 }
-void workerBodyC() {
+void workerBodyC(void* arg) {
     uint8 i = 0;
     for (;i<3;i++) {
         printString("C: i=");
@@ -63,7 +63,7 @@ void workerBodyC() {
         printString("\n");
     }
 }
-void workerBodyD() {
+void workerBodyD(void* arg) {
     uint8 i = 0;
     for (;i<13;i++) {
         printString("D: i=");
