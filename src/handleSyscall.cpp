@@ -5,6 +5,7 @@
 #include "../h/MemoryAllocator.hpp"
 #include "../h/syscall_c.hpp"
 #include "../h/tcb.hpp"
+#include "../lib/console.h"
 void handleSyscall(uint64* context) {
     uint64 result;
     switch (context[10]) {
@@ -19,6 +20,10 @@ void handleSyscall(uint64* context) {
             break;
         case SYSCALL_THREAD_EXIT:
             result = (uint64) TCB::exitCurrent();
+            break;
+        case SYSCALL_PUTC:
+            __putc((char) context[11]);
+            result = 0;
             break;
         default: result = (uint64) SYSCALL_UNKNOWN;
     }

@@ -38,7 +38,7 @@ TCB * TCB::createThread(Body body) {
     return new  TCB(body,TIME_SLICE_SIZE,stack);
 }
 TCB* TCB::createThread(Body body,uint64* stack) {
-    if (body != nullptr && stack != nullptr) {
+    if (body != nullptr && stack == nullptr) {
         return nullptr;
     }
     return new  TCB(body,TIME_SLICE_SIZE,stack);

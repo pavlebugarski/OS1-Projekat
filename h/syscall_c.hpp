@@ -6,6 +6,7 @@ enum SyscallCode{
     SYSCALL_THREAD_CREATE = 0x11,
     SYSCALL_THREAD_EXIT = 0x12,
     SYSCALL_THREAD_DISPATCH = 0x13,
+    SYSCALL_PUTC = 0x42,
     SYSCALL_UNKNOWN = -1,
 };
 
@@ -20,3 +21,4 @@ int thread_create(
     void *arg
     );
 void thread_dispatch();
+void putc(char c);

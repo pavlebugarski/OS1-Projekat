@@ -5,6 +5,7 @@
 #include "../lib/console.h"
 #include "../h/tcb.hpp"
 #include "../h/handleSyscall.hpp"
+#include "../h/print.hpp"
 #include "../h/syscall_c.hpp"
 
 void Riscv::handleSupervisorTrap(uint64* context) {
@@ -45,6 +46,12 @@ void Riscv::handleSupervisorTrap(uint64* context) {
         console_handler();
     }else {
         //ostalo
+        printString("Neobradjen trap, scause=");
+        printInteger(scause);
+        printString(", sepc=");
+        printInteger(r_sepc());
+        printString("\n");
+        while (true) {}
     }
 }
 
