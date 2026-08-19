@@ -9,8 +9,10 @@
 #include "../h/syscall_c.hpp"
 
 void Riscv::handleSupervisorTrap(uint64* context) {
-
     uint64 scause = r_scause();
+    uint64 sepc = r_sepc();
+    uint64 stval = r_stval();
+
     if (scause == 0x0000000000000009UL || scause == 0x0000000000000008UL) {
         //sinhrona promena konteksta
         //sepc je kao pc program counter
@@ -49,7 +51,9 @@ void Riscv::handleSupervisorTrap(uint64* context) {
         printString("Neobradjen trap, scause=");
         printInteger(scause);
         printString(", sepc=");
-        printInteger(r_sepc());
+        printInteger(sepc);
+        printString(", stval=");
+        printInteger(stval);
         printString("\n");
         while (true) {}
     }

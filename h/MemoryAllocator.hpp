@@ -23,6 +23,7 @@ class MemoryAllocator {
     MemoryAllocator(const MemoryAllocator&) = delete;//zabranjeno
     MemoryAllocator& operator=(const MemoryAllocator&) = delete;//zabranjeno
     static size_t roundUpBlock(size_t bytes);
-
+    void* operator new(size_t, void* place);
 };
+inline void* operator new(size_t, void* place) noexcept { return place; }
 #endif

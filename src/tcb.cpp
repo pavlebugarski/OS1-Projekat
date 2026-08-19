@@ -11,6 +11,7 @@
 TCB* TCB::running = nullptr;
 uint64   TCB::timeSliceCounter = 0;
 
+
 bool  TCB::isFinished() const {
     return finished;
 }
@@ -35,13 +36,21 @@ TCB * TCB::createThread(Body body) {
     if (body != nullptr) {
         stack = (uint64*) MemoryAllocator::getInstance().alloc(STACK_SIZE*sizeof(uint64));
     }
-    return new  TCB(body,TIME_SLICE_SIZE,stack);
+    void* mem = MemoryAllocator::getInstance().alloc(sizeof(TCB));
+    if (mem == nullptr) {
+        return nullptr;
+    }
+    return ::new  (mem) TCB(body,TIME_SLICE_SIZE,stack);
 }
 TCB* TCB::createThread(Body body,uint64* stack) {
     if (body != nullptr && stack == nullptr) {
         return nullptr;
     }
-    return new  TCB(body,TIME_SLICE_SIZE,stack);
+    void* mem = MemoryAllocator::getInstance().alloc(sizeof(TCB));
+    if (mem == nullptr) {
+        return nullptr;
+    }
+    return ::new  (mem) TCB(body,TIME_SLICE_SIZE,stack);
 }
 void  TCB::yield() {
     register uint64 x10 __asm__ ("x10") = SYSCALL_THREAD_DISPATCH;
