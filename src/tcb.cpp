@@ -80,3 +80,23 @@ void TCB::threadWrapper() {
     running->setFinished(true);
     TCB::yield();
 }
+
+void TCB::blockOn(List<TCB> &queue) {
+    TCB *old = running;
+    running =  Scheduler::get();
+    if (running == nullptr) {
+        return;
+    }
+    old->setStopped(true);
+    queue.addLast(old);
+    TCB::contextSwitch(&old->context, &running->context);
+}
+
+void TCB::blockOff(List<TCB> &queue) {
+    TCB *back = queue.removeFirst();
+    if (back == nullptr) {
+        return;
+    }
+    back->setStopped(false);
+    Scheduler::put(back);
+}

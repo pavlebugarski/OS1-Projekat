@@ -25,6 +25,7 @@ void handleSyscall(uint64* context) {
             __putc((char) context[11]);
             result = 0;
             break;
+
         default: result = (uint64) SYSCALL_UNKNOWN;
     }
     context[10] = result;

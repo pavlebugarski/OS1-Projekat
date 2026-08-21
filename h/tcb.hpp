@@ -10,7 +10,8 @@ class TCB {
     }
 
 
-
+    static void blockOn(List<TCB>& queue);
+    static void blockOff(List<TCB>& queue);
     static TCB* createThread(Body body);
     static TCB* createThread(Body body,uint64* stack);
     bool isFinished() const;
@@ -43,6 +44,17 @@ private:
     Context context;
     uint64 timeSlice;
     bool finished;
+    bool stopped = false;
+
+public:
+    bool IsStopped() const {
+        return stopped;
+    }
+    void setStopped(bool stopped) {
+        this->stopped = stopped;
+    }
+
+private:
     friend class Riscv;
     static void threadWrapper();
     static uint64 timeSliceCounter;
